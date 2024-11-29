@@ -23,21 +23,15 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
     <link rel="stylesheet" href="assets/styles.css">
+<script src="assets/deleteproduct.js"></script>
 </head>
-
-<style>
-	h1 {
-	display: none;
-	}
-</style>
 
 <body>
     <header>
         <h1>Product List</h1>
-	<h2>Product List</h2>
         <div>
             <button onclick="location.href='addproduct.php'">ADD</button>
-            <button id="delete-product-btn" form="product-list-form">MASS DELETE</button>
+            <button id="delete-product-btn">MASS DELETE</button>
         </div>
     </header>
     <main>
@@ -61,13 +55,9 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </form>
     </main>
-    <script>
-        document.getElementById('delete-product-btn').addEventListener('click', function () {
-            if (confirm("Are you sure you want to delete selected products?")) {
-                document.getElementById('product-list-form').submit();
-            }
-        });
-    </script>
+<footer>
+<p>Scandiweb Test assignment</p>
+</footer>
 </body>
 </html>
 

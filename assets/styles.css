@@ -51,7 +51,27 @@ header button {
     margin-bottom: 10px;
 }
 
-.inputs {
-    color: red;
+.form {
+    padding: 100px;
+    border: 1px solid black;
+    text-align: center;
 }
-     
+
+.form-group {
+    padding-bottom: 20px;
+}
+
+footer {
+    background-color: black;
+    color: white;
+    width: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 0;
+    margin-bottom: -10px;
+    padding-bottom: 5px;
+    height: 100px;
+}

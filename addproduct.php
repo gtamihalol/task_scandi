@@ -4,7 +4,8 @@ ini_set('display_errors', 1);
 
 require_once 'classes/Database.php';
 
-// Если форма отправлена
+require_once 'classes/ProductFactory.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $db = (new Database())->connect();
@@ -14,29 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $price = $_POST['price'];
         $productType = $_POST['productType'];
 
-        // Специфичные данные для типов
-        $size = $productType === 'DVD' ? $_POST['size'] : null;
-        $weight = $productType === 'Book' ? $_POST['weight'] : null;
-        $dimensions = $productType === 'Furniture' ? $_POST['height'] . 'x' . $_POST['width'] . 'x' . $_POST['length'] : null;
+        $extraData = [];
+        if ($productType === 'Book') {
+            $extraData['weight'] = $_POST['weight'];
+        } elseif ($productType === 'DVD') {
+            $extraData['size'] = $_POST['size'];
+        } elseif ($productType === 'Furniture') {
+            $extraData['height'] = $_POST['height'];
+            $extraData['width'] = $_POST['width'];
+            $extraData['length'] = $_POST['length'];
+        }
 
-        // Вставка в базу данных
-        $stmt = $db->prepare("
-            INSERT INTO products (sku, name, price, product_type, size_mb, weight_kg, dimensions)
-            VALUES (:sku, :name, :price, :productType, :size, :weight, :dimensions)
-        ");
-        $stmt->execute([
-            ':sku' => $sku,
-            ':name' => $name,
-            ':price' => $price,
-            ':productType' => $productType,
-            ':size' => $size,
-            ':weight' => $weight,
-            ':dimensions' => $dimensions
-        ]);
+        $product = ProductFactory::createProduct($productType, $sku, $name, $price, $extraData);
+
+        $product->save($db);
 
         header('Location: index.php');
         exit();
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
@@ -48,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Add</title>
-    <link rel="stylesheet" href="assets/style2.css">
+    <link rel="stylesheet" href="assets/styles.css">
     <script src="assets/script2.js" defer></script>
 </head>
 <body>
@@ -59,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button onclick="location.href='../index.php'" class="cancel-btn">Cancel</button>
         </div>
     </header>
-    <main>
+    <main class="form">
         <form id="product_form" method="POST" action="addproduct.php">
             <div class="form-group">
                 <label for="sku">SKU</label>
@@ -111,6 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="description">"Please provide dimensions in HxWxL format."</p>
             </div>
         </form>
+
+
     </main>
+    
+    <footer>
+            <p>Scandiweb Test assignment</p>
+        </footer>
 </body>
 </html>

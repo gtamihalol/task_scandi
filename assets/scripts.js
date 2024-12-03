@@ -1,12 +1,22 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const productType = document.getElementById('productType');
-    const typeSpecificFields = document.querySelectorAll('.type-specific');
+        function handleTypeSwitcherChange() {
+            const typeSwitcher = document.getElementById("productType");
+            const selectedType = typeSwitcher.value;
 
-    productType.addEventListener('change', () => {
-        typeSpecificFields.forEach(field => field.style.display = 'none');
-        const selectedType = productType.value;
-        if (selectedType) {
-            document.getElementById(selectedType).style.display = 'block';
+            // Hide all type-specific fields
+            document.querySelectorAll(".type-specific").forEach(el => {
+                el.style.display = "none";
+            });
+
+            // Show the fields for the selected type
+            if (selectedType) {
+                const typeFields = document.getElementById(selectedType);
+                if (typeFields) {
+                    typeFields.style.display = "block";
+                }
+            }
         }
-    });
-});
+
+        document.addEventListener("DOMContentLoaded", () => {
+            handleTypeSwitcherChange(); // Trigger on page load
+            document.getElementById("productType").addEventListener("change", handleTypeSwitcherChange);
+        });
